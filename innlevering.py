@@ -64,49 +64,53 @@ atlet: NN
 import nltk
 from nltk.corpus import gutenberg
 from itertools import count
-import random
 import nltk
-#from nltk import probability
-#from nltk.inference.tableau import Categories
-#from nltk.tokenize import regexp, word_tokenize
 import numpy as np
+#dette er for å laste ned gutenberg kollektionen
 nltk.download('gutenberg')
-nltk.download('punkt')
+nltk.download('brown')
+#etter å ha lastet den ned kan man importere den
 from nltk.corpus import gutenberg
 from nltk.util import bigrams, trigrams
 from collections import Counter, defaultdict
+from nltk.corpus import brown
 
 
 
+#henter bibelen fra gutenberg collectionen
 gutenberg.fileids()
 gutenberg.raw("bible-kjv.txt")
 gutenberg_ord = gutenberg.words("bible-kjv.txt")
+#antall ord ved len() funksjonen
 antall_token = len(gutenberg_ord)
 print("\n\noppgave 3.1")
 print("Antall tokens er", antall_token)
 
 
 ordtyper = []
+#forloop for å hente hvert av ordene få de til liten bokstaver og legge de til
 for token in gutenberg_ord:
-    typer = token.lower()
-    ordtyper.append(typer)
-antall_typer = len(set(ordtyper))
+    ordtyper.append(token.lower())
+#antall_typer = len(set(ordtyper))
 print("\n\noppgave 3.2")
-print("Antall ordtyper er:", antall_typer)
+print("Antall ordtyper er:", len(set(ordtyper)))
 
-
+#teller antall ganger ordet dukker oppp
 frekvens = Counter(gutenberg_ord)
 print("\n\noppgave 3.3 \n20 mest frekvente ordtypene:")
+#looper mellom de mest frekvente og printer de
 for ord in frekvens.most_common(20):
     print(ord)
 
+'''
+#'''
 print("\n\noppgave 3.4")
-death_forekomst = frekvens["death"]
-print("Death forekommer:", death_forekomst, "ganger")
-life_forekomst = frekvens["heaven"]
+death = frekvens["death"]
+print("Death forekommer:", death, "ganger")
+life_forekomst = frekvens["life"]
 print("Life forekommer:", life_forekomst, "ganger")
-heaven_forekomst = frekvens["life"]
-print("Heaven forekommer:", heaven_forekomst, "ganger")
+heaven = frekvens["heaven"]
+print("Heaven forekommer:", heaven, "ganger")
 
 
 print("\n\n\noppgave 3.5")
@@ -156,3 +160,44 @@ probabilities = {}
 for word, count in fd_generert.items():
     probabilities[word] = count/len(generert_tekst)
 print("sans:", np.prod(sum(probabilities.values())))
+
+patterns = [
+    (r'.*ing$', 'VBG'),                # gerunds: "emitting"
+    (r'.*ed$', 'VBD'),                 # simple past: "designed"
+    (r'.*es$', 'VBZ'),                 # 3rd singular present: "has"
+    (r'.*ould$', 'MD'),                # modals: "could"
+    (r'.*\'s$', 'NN$'),                # possessive nouns: "Samsung's"
+    (r'.*s$', 'NNS'),                  # plural nouns: "months"
+    (r'^-?[0-9]+(\.[0-9]+)?$', 'CD'),  # cardinal numbers: "499"
+    (r'.er*', 'NN'),                   # nouns (default): "OLED"
+    (r'\b[Tt]he|[Aa]n?\b', 'DT'),      # determiner (default): "the"
+    (r'.*s', 'PRP$'),                  # possessive pronoun: "he"
+    (r'.*', 'NNP'),                    # proper noun: "Shahriar"
+]
+#4.2
+#browne = brown.tagged_sents(categories='fiction')
+sents = brown.sents(categories='fiction')
+reg = nltk.RegexpTagger(patterns)
+#bytta fra evaluate til accuracy, gjør samme men throw'er ikke warning
+accuracy = reg.accuracy(brown.tagged_sents(categories='fiction'))
+print("oppgave 4.2")
+print("Accuracy: ", accuracy)
+
+#4.3
+fil = open("setninger.txt", "r", encoding="utf8").read()
+get = nltk.tokenize.sent_tokenize(fil)
+list = []
+for x in get:
+    list.append(x.split())
+setninger = nltk.RegexpTagger(patterns)
+tag = setninger.tag(list[0])
+new_fil = open("taggede_setninger.txt", "a", encoding="utf-8")
+for x in str(tag):
+    new_fil.write(x)
+new_fil.close() 
+new_fil = open("taggede_setninger.txt", "r", encoding="utf-8")
+print("oppgave 4.3")
+print(new_fil.read())
+print(tag)
+"""
+#"""
