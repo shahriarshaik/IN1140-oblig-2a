@@ -1,7 +1,7 @@
 import java.util.Scanner;
 public class analyse{
     public static void main(String[] args) {
-        Scanner sc = new Scanner("10 Behold , in the king of the glory of Jesus withdrew himself : 30 : 27 For I will pour of the earth , namely , and for their treasures ; and the seer ; 2 The thought with me , and unto the inhabitants of the men of them from being reconciled to do such as ye have life of the tabernacle .");
+        Scanner sc = new Scanner("17 And thou , that trusteth in heavenly . 47 Can God of him , serve him that they not ; and five curtains shalt see him good understanding ; and she caught him . 14 And there is a truth , and hast spoken , he said unto us away the priest , 6 : 16 A time , and knowledge is as of Moses and smote him : 2 : 35 : 2 : 45 : 133 Order ye have I have sinned in the house with pain as a lot .");
         //Scanner sc = new Scanner(null);
         int i = 0;
         while(sc.hasNext()){

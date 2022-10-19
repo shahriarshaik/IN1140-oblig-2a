@@ -63,17 +63,12 @@ atlet: NN
 
 import nltk
 from nltk.corpus import gutenberg
-
-print("helloooo")
-
-
-
 from itertools import count
 import random
 import nltk
-from nltk import probability
-from nltk.inference.tableau import Categories
-from nltk.tokenize import regexp, word_tokenize
+#from nltk import probability
+#from nltk.inference.tableau import Categories
+#from nltk.tokenize import regexp, word_tokenize
 import numpy as np
 nltk.download('gutenberg')
 nltk.download('punkt')
@@ -84,13 +79,9 @@ from collections import Counter, defaultdict
 
 
 gutenberg.fileids()
-
 gutenberg.raw("bible-kjv.txt")
-
 gutenberg_ord = gutenberg.words("bible-kjv.txt")
-
 antall_token = len(gutenberg_ord)
-
 print("\n\noppgave 3.1")
 print("Antall tokens er", antall_token)
 
@@ -99,10 +90,10 @@ ordtyper = []
 for token in gutenberg_ord:
     typer = token.lower()
     ordtyper.append(typer)
-
 antall_typer = len(set(ordtyper))
 print("\n\noppgave 3.2")
 print("Antall ordtyper er:", antall_typer)
+
 
 frekvens = Counter(gutenberg_ord)
 print("\n\noppgave 3.3 \n20 mest frekvente ordtypene:")
@@ -129,35 +120,28 @@ gutenberg_setninger = gutenberg.sents("bible-kjv.txt")
 trigram = trigrams(gutenberg_setninger[7])
 print("Bigram som forekommer i den aattende setningen er:\n", list(trigram))
 
+
 bigram_counts = defaultdict(lambda: defaultdict(lambda: 0))
 bigram_model = defaultdict(lambda: defaultdict(lambda: 0.0))
-
 for sentence in gutenberg_setninger:
     for w1, w2 in bigrams(sentence, pad_right= True, pad_left = True):
         bigram_counts[w1][w2] += 1
-
 for w1 in bigram_counts:
     total_bigramcount = sum(bigram_counts[w1].values())
     for w2 in bigram_counts[w1]:
         if total_bigramcount:
             bigram_model[w1][w2] = bigram_counts[w1][w2]/total_bigramcount
-
 text = [None]
 sentence_is_finished = False
-
+antall = 0
 while not sentence_is_finished:
     key = text[-1]
-
     ord = list(bigram_model[key].keys())
-
     probs = list(bigram_model[key].values())
-
     text.append(np.random.choice(ord, p=probs)) 
-    
-    if text[-1] == None:
+    antall = antall + 1
+    if text[-1] == None and antall > 51:
         sentence_is_finished = True
-
-
 generert_tekst = " ".join([t for t in text if t])
 print("\n\noppgave 3.7")
 print(generert_tekst)
@@ -166,18 +150,9 @@ print(generert_tekst)
 generert_tekst1 = generert_tekst.split()
 bigram_generert_tekst = list(bigrams(generert_tekst1))
 print("\n\noppgave 3.8")
-#print(bigram_generert_tekst)
-
 fd_generert = Counter(bigram_generert_tekst)
 print(fd_generert)
 probabilities = {}
-
 for word, count in fd_generert.items():
     probabilities[word] = count/len(generert_tekst)
 print("sans:", np.prod(sum(probabilities.values())))
-
-"""
-
-
-
-    """
